@@ -36,13 +36,21 @@ extern std::function<void()> fonction_de_fin;
 void definir_class_fin(std::function<void()> ff);
 
 
-void thread_commande(std::chrono::duration<double> & t_duree);
+void thread_commande(const std::chrono::duration<double> & t_duree , 
+                    std::promise<std::chrono::duration<double>> && Pmsg_duree_compteur ,
+                    std::future<bool>&& Fmsg_arret_partie_com ,
+                    std::promise<bool>&& Pmsg_arret_compteur ,
+                    char* argv[] , int argc 
+                    );
 
-void thread_compteur(std::chrono::duration<double> & t_duree);
+void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
+                     std::future<std::chrono::duration<double>>&& Fmsg_duree_compteur ,
+                     std::future<bool>&& Fmsg_arret_compteur 
+                    );
 
+//modification aussi ici 
 
-
-
+// git diff modification non indexée
 
 
 

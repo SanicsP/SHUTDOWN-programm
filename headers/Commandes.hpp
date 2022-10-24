@@ -22,6 +22,9 @@
  * @file
 */
 
+// modification pour git 
+
+//git diff 
 
 #ifndef COMMANDES_HPP
 #define COMMANDES_HPP
@@ -135,6 +138,10 @@ std::pair<std::string , bool> est_commande_argument(const std::string & commande
 */
 std::vector<std::string> recup_arg(const stdStab& ListeArguments); //DEBUG F2
 
+/**
+ * @brief converti une ligne de commande en tableau d'arguments de type stdStab
+*/
 
+stdStab conversion_chaine_caractere(const std::string& chaine);
 
 #endif

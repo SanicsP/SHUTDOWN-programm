@@ -32,7 +32,10 @@ int main(int argc , char* argv[])
         std::cout<<"duree en secondes : "<<duree.count()<<" s  soit "<<duree.count()/3600<<" heures et , "<< duree.count()/60<<" minutes"<<std::endl;
     }
     
-
+    std::string comm;
+    std::getline(std::cin , comm);
+    stdStab tab2 = conversion_chaine_caractere(comm);
+    afficherStab(tab2);
     
     std::cin.ignore();
     return 0;

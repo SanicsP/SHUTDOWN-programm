@@ -1,6 +1,6 @@
 #include "Commandes.hpp"
 #include <cstdlib>
-
+#include <iostream>
 
 std::function<void()> fonction_de_fin = nullptr; 
 
@@ -38,8 +38,20 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
 
     //deuxième partie du thread 
     Pmsg_duree_compteur.set_value(duree_compteur);
+    
+    std::string entree_utilisateur;
+    
+    while(true)
+    {
+        std::cin>>entree_utilisateur; 
+        liste_Commandes = conversion_chaine_caractere(entree_utilisateur);
+        pile_Commandes = interpreter_Stab(liste_Commandes);
+        liste_Parametres = recup_arg(liste_Commandes);
 
-   
+ 
+        
+    }
+    
 
 
 

@@ -2,26 +2,34 @@
 
 void tu_Commandes()
 {
-    //test fonction convertir_cahine
+
+    
+//test fonction convertir_cahine ***************************************************************
     char* argv[] = {
+        "NOM_DU_PROGRAMME_NE_PAS_RECUPER"
         "bonjour",
         "je",
-        "suis"
+        "suis",
         "une",
         "commande"
     };
-    int argc = 5;
+    int argc = 6;
     
-    stdStab tab_test = convertir_chaine(argv , argc);
+    stdStab tab_test1 = convertir_chaine(argv , argc);
+    
     stdStab tab_comparatif { 
         "bonjour",
         "je",
-        "suis"
+        "suis",
         "une",
         "commande"
     };
-    assert(tab_test == tab_comparatif && "presence de bug dans la fonction convertir_chain() : comportement innatendu");
+    assert(tab_test1 == tab_comparatif && "presence de bug dans la fonction convertir_chain() : comportement innatendu");
 
+////////////////////////////////////////////////////////////////////////////////////////////////////:
+
+
+//test de fonction interpreter Stab ********************************************************************
     stdComPile pile_teste = interpreter_Stab( 
         {
             "-t[45]" , "-an" , "-af" , "-rd" , "-stop"
@@ -46,13 +54,19 @@ void tu_Commandes()
     );
     assert(est_commande_argument(arg[0]).first == "-t" && 
     "presence de bugs dans la fonction est_commande_argument comportement indeterminé ");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//test de la fonction recup_arg ****************************************************************************
     std::stack<std::string> list_arg_test = recup_arg( 
         {"-t[45h]"}
         
     );
     assert(list_arg_test.top() == "45h" && "presence de bugs dans la fonction recup_arg() comportement indeterminé");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//test de la fonction conversion_chaine_caractere**************************************************
     const std::string mauvaise_entree_u = "    arg1 arg2 arg3[]  ....     34   56    12   -m -an ";
     stdStab comparatif = {
         "arg1" , "arg2" , "arg3[]" , "...." , "34" , "56" , "12" , "-m" "-an"
@@ -60,7 +74,10 @@ void tu_Commandes()
 
     assert(conversion_chaine_caractere(mauvaise_entree_u) == comparatif && 
     "presence de bugs dans la fonction conversion_chaine_caractere() comportement indeterminé");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//tests de l'executeur*************************************************************************************
     stdStab tab_test = {
         "-t[45h]" "-an"
     };
@@ -73,6 +90,7 @@ void tu_Commandes()
 
     assert(duree_t.count() / 3600 == 45 && commutateur_test == Acom::AN && "presence de bugs dans l'executeur , comportement indetermine");
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     
 

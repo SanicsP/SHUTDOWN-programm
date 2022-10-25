@@ -1,8 +1,11 @@
 #ifndef SHUT_HPP
 #define SHUT_HPP
+
 #include <functional>
 #include <thread>
 #include <future>
+
+
 
 
 /**
@@ -15,7 +18,7 @@
  *  @details AF signifie arrêt forcé , AN signifie arrêt normal , RD signifie redemarage
  *  @enum 
 */
-enum class Acom
+enum class Acom : int
 {
     AF   = 0, /// @brief arrêt forcé
     AN   = 1, /// @brief arrêt immédiat 

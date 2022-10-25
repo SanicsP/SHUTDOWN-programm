@@ -39,21 +39,20 @@ set(libTESTS_sources
 include_directories(headers) 
 
 
-#ajout de bibliothèques de comptage
-add_library(libCompteur ${libCompteur_sources})
 
 #ajour de bibliothèque d'arrêt du programme
 add_library(libSHUT ${libSHUT_sources})
 
-#ajour de bibliothèque d'interpret des commandes
-add_library(libCommandes ${libCommandes_sources})
 
-#ajour de bibliothèque d'interpret des commandes
+#ajour de bibliothèque des tests
 add_library(libTESTS ${libTESTS_sources})
+
+#ajour de bibliothèque d'interpret des commandes et du compteur 
+add_library(libCommandes ${libCommandes_sources} ${libCompteur_sources})
 
 
 
 
 #construction du programme 
 add_executable(${project_name} ${main_source})
-target_link_libraries(${project_name} libCompteur libSHUT libCommandes libTESTS)
+target_link_libraries(${project_name} libSHUT libTESTS libCommandes)

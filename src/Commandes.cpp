@@ -1,4 +1,6 @@
 #include "Commandes.hpp"
+#include "Compteur.hpp"
+
 #include <iostream>
 
 
@@ -113,13 +115,13 @@ stdComPile interpreter_Stab(const stdStab& ListeArguments)
     
 }
 
-std::vector<std::string> recup_arg(const stdStab& ListeArguments)
+std::stack<std::string> recup_arg(const stdStab& ListeArguments)
 {
     std::string::const_iterator separateur_fermant;
     
     std::string::const_iterator separateur_ouvrant;
     std::string nombre;    
-    std::vector<std::string> liste_param {};
+    std::stack<std::string> liste_param {};
     
     for(int i = 0 ; i < ListeArguments.size() ; i++)
     {
@@ -130,7 +132,7 @@ std::vector<std::string> recup_arg(const stdStab& ListeArguments)
 
             nombre = {separateur_ouvrant , separateur_fermant};
             std::cout<<"DEBUG F2 : "<<"arguemnt de "<<ListeArguments[i]<<" : "<<nombre<<std::endl;
-            liste_param.push_back(nombre);
+            liste_param.push(nombre);
 
         }
     }
@@ -158,8 +160,55 @@ stdStab conversion_chaine_caractere(const std::string& chaine)
         
     }
 
-    //modification commit  md1 
+   
 
     return tab;
+
+}
+
+void executeur(std::chrono::duration<double> & duree , Acom&  commutateur , stdComPile & pile_commande , 
+               std::stack<std::string> & liste_param )
+{
+    int id_commande = 0;
+    int parcour_arg = 0;
+    int i = pile_commande.size();
+
+    while(!pile_commande.empty())
+    {
+        id_commande = pile_commande.top();
+        pile_commande.pop();
+
+        switch(id_commande)
+        {
+            case 0 :
+                    duree = conversion_duree(liste_param.top());
+                    liste_param.pop();
+                std::cout<<"Executeur j'execute la commande T "<<id_commande<<" ! \n ";
+            break;
+            
+            case 1 :   
+                commutateur = Acom::AF;
+                std::cout<<"Executeur j'execute la commande "<<id_commande<<" ! \n ";
+            break;
+
+            case 2 :
+                commutateur = Acom::RD;
+                std::cout<<"Executeur j'execute la commande "<<id_commande<<" ! \n ";
+            break;
+
+            case 3 :
+                commutateur = Acom::AN;
+                std::cout<<"Executeur j'execute la commande "<<id_commande<<" ! \n ";
+            break;
+
+            case 4 :
+                commutateur = Acom::ANUL;
+                std::cout<<"Executeur j'execute la commande "<<id_commande<<" ! \n ";
+            break;
+        
+        }
+        i--;
+        std::cout<<"nobre execution"<<std::endl;
+    }
 
 }

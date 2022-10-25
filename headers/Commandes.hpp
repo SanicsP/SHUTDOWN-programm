@@ -19,7 +19,7 @@
 */
 
 /**
- * @file
+ * @file 
 */
 
 // modification pour git 
@@ -28,6 +28,19 @@
 
 #ifndef COMMANDES_HPP
 #define COMMANDES_HPP
+
+#include <string>
+#include <vector>
+#include <cstring>
+#include <array>
+#include <stack>
+#include <algorithm>
+#include <stdexcept>
+#include <functional>
+
+#include "SHUT.hpp"
+
+
 //commit test 
 //line
 
@@ -57,14 +70,6 @@
 ////////////////////////////////////////////////////
 
 
-#include <string>
-#include <vector>
-#include <cstring>
-#include <array>
-#include <stack>
-#include <algorithm>
-#include <stdexcept>
-#include <functional>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //alias
@@ -136,12 +141,31 @@ std::pair<std::string , bool> est_commande_argument(const std::string & commande
  * par exemple : -drapeau[argument] , la fonction retournera "argument" 
  * @param
 */
-std::vector<std::string> recup_arg(const stdStab& ListeArguments); //DEBUG F2
+std::stack<std::string> recup_arg(const stdStab& ListeArguments); //DEBUG F2
 
 /**
  * @brief converti une ligne de commande en tableau d'arguments de type stdStab
 */
-
 stdStab conversion_chaine_caractere(const std::string& chaine);
+
+
+
+
+// executeur de commandes 
+
+/**
+ * @brief analyse la pile de commande et execute une commande en fonction de l'id 
+ * @details l'orsqu'on lui passe une pile de commande , l'executeur parcour cette dernière executant une commande en 
+ * en fonction de son identifiant
+ * @param duree la duréé à modifier pour la commande -t 
+ * @param commutateur le commutateur à modifier pour les commandes : -an , -af , -rd , -stop 
+ * @param pile_commande la pile à analyser qui contient la liste des commandes à éxecuter 
+ * @param liste_param la liste des arguments pour les commandes 
+ * @pre la pile passée doit au moins contenir un élement et l'id de la commande de temps doit y figurer obligatoirement 
+ * @post à la fin de la fonction , la pile sera vide et devra être rechargé avec une nouvelle entrée utilisateur 
+ * 
+*/
+void executeur(std::chrono::duration<double> & duree , Acom&  commutateur , stdComPile & pile_commande , 
+               std::stack<std::string> & liste_param );
 
 #endif

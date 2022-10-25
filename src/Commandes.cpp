@@ -150,17 +150,18 @@ stdStab conversion_chaine_caractere(const std::string& chaine)
     {
         fin = std::find(debut , std::end(chaine) , ' ');
         tab.push_back({debut , fin});
+        
         if(fin != std::end(chaine))
             fin++;
+
+        while(*(fin +1 ) == ' ')
+            fin++;
+
         debut = fin;
     }
 
 
-  
 
-
- 
-    
     return tab;
 
 }

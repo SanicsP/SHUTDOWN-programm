@@ -30,6 +30,8 @@ public:
     */
     compteur(double duree) noexcept;
 
+    
+
     /**
       *@brief verifie si le compteur à atteint la durée cible 
       *@returns true , si le compteur a atteint la duree cible , false dans le cas contraire.

@@ -6,7 +6,7 @@ void tu_Commandes()
     
 //test fonction convertir_cahine ***************************************************************
     char* argv[] = {
-        "NOM_DU_PROGRAMME_NE_PAS_RECUPER"
+        "NOM_DU_PROGRAMME_NE_PAS_RECUPER",
         "bonjour",
         "je",
         "suis",
@@ -69,9 +69,10 @@ void tu_Commandes()
 //test de la fonction conversion_chaine_caractere**************************************************
     const std::string mauvaise_entree_u = "    arg1 arg2 arg3[]  ....     34   56    12   -m -an ";
     stdStab comparatif = {
-        "arg1" , "arg2" , "arg3[]" , "...." , "34" , "56" , "12" , "-m" "-an"
+        "arg1" , "arg2" , "arg3[]" , "...." , "34" , "56" , "12" , "-m" , "-an" , ""
     };
 
+    afficherStab(conversion_chaine_caractere(mauvaise_entree_u));
     assert(conversion_chaine_caractere(mauvaise_entree_u) == comparatif && 
     "presence de bugs dans la fonction conversion_chaine_caractere() comportement indeterminé");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +80,7 @@ void tu_Commandes()
 
 //tests de l'executeur*************************************************************************************
     stdStab tab_test = {
-        "-t[45h]" "-an"
+        "-t[45h]" , "-an"
     };
     std::chrono::duration<double> duree_t {0};
     Acom commutateur_test;
@@ -93,7 +94,7 @@ void tu_Commandes()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     
-
+std::cout<<"tu_Commandes : tout est ok aucune assertion activee"<<std::endl;
 
 }
 

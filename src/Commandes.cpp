@@ -45,9 +45,10 @@ stdStab convertir_chaine(char* argv[] , int taille)
 
 void afficherStab(const stdStab & tab)
 {
+    std::cout<<"->";
     for(std::string s : tab)
     {
-        std::cout<<s<<std::endl;
+        std::cout<<s<<" ";
     }
 }
 

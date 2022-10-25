@@ -141,23 +141,21 @@ std::vector<std::string> recup_arg(const stdStab& ListeArguments)
 stdStab conversion_chaine_caractere(const std::string& chaine)
 {
     std::string::const_iterator debut = std::begin(chaine);
-    std::string::const_iterator fin = std::begin(chaine) + 1;
-    std::string::const_iterator temp;
+    std::string::const_iterator fin = std::begin(chaine);
+ 
     stdStab tab;
     
-    int i = 0;
+
     while(fin != std::end(chaine))
     {
+        while(*(fin) == ' ') //sauter les occurences d'espaces  
+            fin++;
+
+        debut = fin; //remettre les itérateurs au bon ordre 
+
         fin = std::find(debut , std::end(chaine) , ' ');
         tab.push_back({debut , fin});
         
-        if(fin != std::end(chaine))
-            fin++;
-
-        while(*(fin +1 ) == ' ')
-            fin++;
-
-        debut = fin;
     }
 
 

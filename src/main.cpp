@@ -35,7 +35,10 @@ int main(int argc , char* argv[])
     std::string comm;
     std::getline(std::cin , comm);
     stdStab tab2 = conversion_chaine_caractere(comm);
+    //std::cout<<'\n'<<std::endl;
     afficherStab(tab2);
+
+    std::cout<<"taille du tableau : "<<tab2.size()<<std::endl;
     
     std::cin.ignore();
     return 0;

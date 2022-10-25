@@ -158,7 +158,7 @@ stdStab conversion_chaine_caractere(const std::string& chaine)
         
     }
 
-    //modification commit 
+    //modification commit  md1 
 
     return tab;
 

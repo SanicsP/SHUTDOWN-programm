@@ -20,7 +20,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
                     std::promise<std::chrono::duration<double>> && Pmsg_duree_compteur ,
                     std::future<bool>&& Fmsg_arret_partie_com ,
                     std::promise<bool>&& Pmsg_arret_compteur ,
-                    char* argv[] , int argc , std::promise<Acom> && Pmsg_commutateur
+                    char* argv[] , int argc , std::atomic<Acom> & ATCmsg_commutateur
                     )
 {
     // première partie du thread 
@@ -38,6 +38,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
     liste_Parametres = recup_arg(liste_Commandes);
 
     executeur(duree_compteur , commutateur , pile_Commandes , liste_Parametres);
+    ATCmsg_commutateur.store(commutateur , std::memory_order_release);
 
     //deuxième partie du thread 
     Pmsg_duree_compteur.set_value(duree_compteur);
@@ -89,12 +90,12 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
         
         std::cout<<"Commande validee !\n";
         std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
-
+        ATCmsg_commutateur.store(commutateur , std::memory_order_release);
     }
     
 
 
-    Pmsg_commutateur.set_value(commutateur);
+    
     std::cout<<"arret thread commandes "<<std::endl;
     std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
     return;
@@ -125,5 +126,47 @@ void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
     }
     std::cout<<"Le temps est ecoule , l'arret du system va s'operer \n";
     // std::cout<<"arret thread compteur\t \t Veuillez valider votre entree la commande ne s'executera pas , le compteur est arrive a son terme\n ";
+
+}
+
+void fonction_fin_programme(Acom commutateur)
+{
+    fonction_de_fin();
+    arret_systeme(commutateur);
+    std::terminate();
+}
+
+void arret_systeme(Acom commutateur)
+{
+    switch (commutateur)
+    {
+        case Acom::AF : //arrêt forcé  
+            std::cout<<"Arret du systeme de maniere forcee : -af \n";
+            system("shutdown /f /t 10");
+        break;
+
+        case Acom::AN : //arrêt normal 
+            std::cout<<"Arret du systeme de maniere normale : -an \n";
+            system("shutdown /s -s-t 10");
+        break;
+
+        case Acom::RD : //redemarage
+            std::cout<<"redemarage : -rd \n";
+            system("shutdown /r /t 10");
+
+
+        break;
+
+        case Acom::ANUL : // annuler 
+            std::cout<<"Le system ne s'arretera pas : -stop \n";
+
+        break;
+    
+    }
+}
+
+void messages()
+{
+    std::cout<<"fin du programme"<<std::endl;
 
 }

@@ -5,7 +5,8 @@
 #include <thread>
 #include <future>
 #include <limits>
-
+#include <atomic>
+#include <cstdlib>
 
 
 /**
@@ -37,7 +38,6 @@ extern std::function<void()> fonction_de_fin;
  * @param[in] std::function<void()> la fonction à invoquer   
 */
 void definir_class_fin(std::function<void()> ff);
-
 /**
  * @brief thread gérant la partie communication entre le programme et l'utilisateur 
  * @details thread exécutant la partie du logiciel dediée à la communication entre l'utilisateur et le programme
@@ -63,7 +63,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
                     std::promise<std::chrono::duration<double>> && Pmsg_duree_compteur ,
                     std::future<bool>&& Fmsg_arret_partie_com ,
                     std::promise<bool>&& Pmsg_arret_compteur ,
-                    char* argv[] , int argc , std::promise<Acom> && Pmsg_commutateur
+                    char* argv[] , int argc , std::atomic<Acom> & ATCmsg_commutateur
                     );
 
 void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
@@ -71,10 +71,10 @@ void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
                      std::future<bool>&& Fmsg_arret_compteur 
                     );
 
-//modification aussi ici 
+//fonction de fin du programme 
 
-// git diff modification non indexée
+void messages ();
+void fonction_fin_programme(Acom commutateur);
 
-
-
+void arret_systeme(Acom commutateur);
 #endif

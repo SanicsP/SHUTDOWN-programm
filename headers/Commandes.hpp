@@ -122,6 +122,7 @@ void afficherStab(const stdStab & tab);
  * @param[in] stdStab tableau de chaines , vecteur de commandes 
  * @pre la commande doit être valide 
  * @post la pile de commande sera construite et pourra être utilisée par l'executeur 
+ * @exception Envoi une exception de type std::invalid_argument si l'argument entree par l'utilisateur n'a pas de sens 
 */
 stdComPile interpreter_Stab(const stdStab& ListeArguments);
 

@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 
+
 std::function<void()> fonction_de_fin = nullptr; 
 
 void definir_class_fin(std::function<void()> ff)
@@ -45,21 +46,49 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
      
     while(true)
     {
-        std::getline(std::cin , entree_utilisateur); 
-        liste_Commandes = conversion_chaine_caractere(entree_utilisateur);
-        pile_Commandes = interpreter_Stab(liste_Commandes);
+        std::cout<<"Voulez vous changer de commutauer ou annuler l'arret du system ? \n \n";
+        std::cout<<"Votre Commande -> ";
+        
+        std::getline(std::cin , entree_utilisateur);
+
+         
+        std::cout<<"\n/////////////////////////////////////////////////// debut resultat\n";
+
+        
+        try{
+
+            liste_Commandes = conversion_chaine_caractere(entree_utilisateur);
+            pile_Commandes = interpreter_Stab(liste_Commandes);
+
+        }
+        catch(const std::invalid_argument & exception)
+        {
+            entree_utilisateur = "\n";
+            std::cout<<exception.what() << "\n \n";
+            std::cin.clear();
+            std::cout<<"appuyez sur entrer : ";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max() , '\n');
+            std::cout<<"\n/////////////////////////////////////////////////////////////// fin resultat\n \n";
+            continue;
+        }
+
         liste_Parametres = recup_arg(liste_Commandes);
         
+        if(Fmsg_arret_partie_com.wait_for(0s) == std::future_status::ready) // le thread du compteur demande d'arreter , temps écoulé
+            break;
+
         executeur(duree_compteur , commutateur , pile_Commandes , liste_Parametres);
         
         if(commutateur == Acom::ANUL)
         {
             Pmsg_arret_compteur.set_value(true);
+            std::cout<<"annulation de l'arret du programme"<<std::endl;
             break;
         }
         
-        if(Fmsg_arret_partie_com.wait_for(0s) == std::future_status::ready) // le thread du compteur demande d'arreter , temps écoulé
-            break;
+        
+        std::cout<<"Commande validee !\n";
+        std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
 
     }
     
@@ -67,6 +96,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
 
     Pmsg_commutateur.set_value(commutateur);
     std::cout<<"arret thread commandes "<<std::endl;
+    std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
     return;
 
 }
@@ -93,6 +123,7 @@ void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
         }
         
     }
-    std::cout<<"arret thread compteur "<<std::endl;
+    std::cout<<"Le temps est ecoule , l'arret du system va s'operer \n";
+    // std::cout<<"arret thread compteur\t \t Veuillez valider votre entree la commande ne s'executera pas , le compteur est arrive a son terme\n ";
 
 }

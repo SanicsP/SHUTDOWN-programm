@@ -1,4 +1,11 @@
-set(project_name SHUTDOWN)
+cmake_minimum_required(VERSION 3.24)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
+
+set(project_name SW)
+
+#options de compilation 
+set (Mode_executable release)
 
 #chemin relatif
 set(r_src_dir src)
@@ -6,11 +13,9 @@ set(r_hd_dir header)
 
 # bibliothèques 
 
-
 project(${project_name})
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED true)
+
 
 
 set(main_source 
@@ -54,5 +59,15 @@ add_library(libCommandes ${libCommandes_sources} ${libCompteur_sources})
 
 
 #construction du programme 
+if(${Mode_executable}|release MATCHES regex)
+
+add_compile_options(-O3)
+
+elseif(${Mode_executable}|debug MATCHES regex)
+
+endif()
+
+add_compile_options(-Wall -Wextra)
+ 
 add_executable(${project_name} ${main_source})
 target_link_libraries(${project_name} libSHUT libTESTS libCommandes)

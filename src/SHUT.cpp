@@ -20,7 +20,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
                     std::promise<std::chrono::duration<double>> && Pmsg_duree_compteur ,
                     std::future<bool>&& Fmsg_arret_partie_com ,
                     std::promise<bool>&& Pmsg_arret_compteur ,
-                    char* argv[] , int argc , std::atomic<Acom> & ATCmsg_commutateur
+                    char* argv[] , int argc , std::atomic<Acom> & ATCmsg_commutateur , std::mutex & verroux_flux_sortie
                     )
 {
     // première partie du thread 
@@ -28,16 +28,39 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
    
     Acom commutateur;  
     std::chrono::duration<double> duree_compteur{};
-    
+    std::string liste_commande_exception;
     std::stack<std::string> liste_Parametres{};
     stdComPile pile_Commandes{};
     stdStab liste_Commandes{};
     
-    liste_Commandes = convertir_chaine(argv , argc);
-    pile_Commandes = interpreter_Stab (liste_Commandes);
-    liste_Parametres = recup_arg(liste_Commandes);
+    bool exception_arrivee = false;
+    while(true) {
+    
+    try {
 
+    if(!exception_arrivee)
+        liste_Commandes = convertir_chaine(argv , argc);
+    else
+        liste_Commandes = conversion_chaine_caractere(liste_commande_exception);
+
+    pile_Commandes = interpreter_Stab (liste_Commandes);
+
+    liste_Parametres = recup_arg(liste_Commandes);
+    
     executeur(duree_compteur , commutateur , pile_Commandes , liste_Parametres);
+
+    break;
+
+    }
+    catch(const std::invalid_argument & exception)
+    {
+        std::cout<<exception.what()<<" \n Reinscrivez votre commande -> ";
+        std::getline(std::cin , liste_commande_exception);
+        liste_Commandes = {};   
+        exception_arrivee = true;
+        continue;
+    }
+}
     ATCmsg_commutateur.store(commutateur , std::memory_order_release);
 
     //deuxième partie du thread 
@@ -47,10 +70,14 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
      
     while(true)
     {
+        verroux_flux_sortie.try_lock();
         std::cout<<"Voulez vous changer de commutauer ou annuler l'arret du system ? \n \n";
         std::cout<<"Votre Commande -> ";
+        verroux_flux_sortie.unlock();
+        
         
         std::getline(std::cin , entree_utilisateur);
+        
 
          
         std::cout<<"\n/////////////////////////////////////////////////// debut resultat\n";
@@ -87,17 +114,20 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
             break;
         }
         
-        
+        verroux_flux_sortie.try_lock();
         std::cout<<"Commande validee !\n";
         std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
+        verroux_flux_sortie.unlock();
+
         ATCmsg_commutateur.store(commutateur , std::memory_order_release);
     }
     
 
 
-    
+    verroux_flux_sortie.lock();
     std::cout<<"arret thread commandes "<<std::endl;
     std::cout<<"/////////////////////////////////////////////////// fin resultat\n \n";
+    verroux_flux_sortie.unlock();
     return;
 
 }
@@ -105,7 +135,7 @@ void thread_commande(const std::chrono::duration<double> & t_duree ,
 
 void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
                      std::future<std::chrono::duration<double>>&& Fmsg_duree_compteur ,
-                     std::future<bool>&& Fmsg_arret_compteur 
+                     std::future<bool>&& Fmsg_arret_compteur , std::mutex & verroux_flux_sortie
                     )
 {
     std::chrono::duration<double> duree_compteur = Fmsg_duree_compteur.get();
@@ -124,7 +154,9 @@ void thread_compteur(std::promise<bool>&& Pmsg_arret_partie_com ,
         }
         
     }
-    std::cout<<"Le temps est ecoule , l'arret du system va s'operer \n";
+    verroux_flux_sortie.try_lock();
+    std::cout<<"\nLe temps est ecoule , l'arret du system va s'operer\n\n";
+    verroux_flux_sortie.unlock();
     // std::cout<<"arret thread compteur\t \t Veuillez valider votre entree la commande ne s'executera pas , le compteur est arrive a son terme\n ";
 
 }
@@ -147,13 +179,12 @@ void arret_systeme(Acom commutateur)
 
         case Acom::AN : //arrêt normal 
             std::cout<<"Arret du systeme de maniere normale : -an \n";
-            system("shutdown /s -s-t 10");
+            system("shutdown /s /t 10");
         break;
 
         case Acom::RD : //redemarage
-            std::cout<<"redemarage : -rd \n";
+            std::cout<<" le system va redemarage : -rd \n";
             system("shutdown /r /t 10");
-
 
         break;
 
@@ -167,6 +198,6 @@ void arret_systeme(Acom commutateur)
 
 void messages()
 {
-    std::cout<<"fin du programme"<<std::endl;
+    std::cout<<"\nfin du programme\n\n";
 
 }

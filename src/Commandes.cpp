@@ -38,6 +38,8 @@ stdStab convertir_chaine(char* argv[] , int taille)
         tab.push_back(argv[i]);
     }
 
+    if(tab.empty())
+        throw std::invalid_argument("aucune commande n'a ete inscrite");
     return tab;
 
     

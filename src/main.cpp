@@ -10,12 +10,13 @@ int main(int argc , char* argv[])
 {
    
     //test unbitaires 
-        tu_Commandes();
-        tu_Compteur();
-        tu_SHUT();
+        //tu_Commandes();
+        //tu_Compteur();
+        //tu_SHUT();
     ///
-    definir_class_fin(messages);
 
+    definir_class_fin(messages);
+    std::mutex verrou_flux_sortie;
     Acom commutateur{};
     std::chrono::duration<double>  t_duree ;
     //initialistaion variable atomique 
@@ -34,10 +35,10 @@ int main(int argc , char* argv[])
     //initialisation des threads 
     std::thread thread_partie_commande(thread_commande, t_duree , std::move(Pmsg_duree_compteur) 
                                      , std::move(Fmsg_arret_partie_com)  , std::move(Pmsg_arret_compteur), 
-                                       argv , argc , std::ref(ATCmsg_retour_commutateur));
+                                       argv , argc , std::ref(ATCmsg_retour_commutateur) , std::ref(verrou_flux_sortie));
     
     std::thread thread_partie_compteur(thread_compteur , std::move(Pmsg_arret_partie_com ), std::move(Fmsg_duree_compteur) 
-                                      , std::move(Fmsg_arret_compteur)
+                                      , std::move(Fmsg_arret_compteur) , std::ref(verrou_flux_sortie)
       );
 
     thread_partie_commande.detach();
